@@ -2,6 +2,8 @@ import sbt._
 import Keys._
 import java.io.File
 import com.typesafe.sbt.osgi.SbtOsgi._
+import bintray.Plugin._
+
 
 /**
  * ScalaBuff SBT build file.
@@ -22,20 +24,22 @@ object ScalaBuffBuild extends Build {
 	lazy val buildSettings = Seq(
 		name := "ScalaBuff",
 		organization := "net.sandrogrzicic",
-		version := "1.3.8",
+        version := "1.3.9",
 		scalaVersion := "2.10.4",
 		logLevel := Level.Info
 	)
 
-	object sonatype extends PublishToSonatype(ScalaBuffBuild) {
+	/*object sonatype extends PublishToSonatype(ScalaBuffBuild) {
 		def projectUrl    = "https://github.com/SandroGrzicic/ScalaBuff"
 		def developerId   = "sandrogrzicic"
 		def developerName = "Sandro Grzicic"
-	}
+	} */
 
 	override lazy val settings = super.settings ++ buildSettings
 
 	lazy val defaultSettings = Defaults.defaultSettings ++ Seq(
+
+ 		licenses := Seq("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
 
 		resolvers ++= Seq(
 			"Akka Maven Repository" at "http://akka.io/repository",
@@ -56,7 +60,7 @@ object ScalaBuffBuild extends Build {
         Seq()
     }),
 
-		crossScalaVersions ++= Seq("2.9.3", "2.10.4", "2.11.0"),
+		crossScalaVersions ++= Seq("2.10.4", "2.11.0"),
 		
 		scalacOptions ++= Seq("-encoding", "utf8", "-unchecked", "-deprecation", "-Xlint"),
 		scalacOptions ++=
@@ -80,7 +84,7 @@ object ScalaBuffBuild extends Build {
 		compileOrder := CompileOrder.Mixed,
 		
 		credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
-	) ++ sonatype.settings
+	) ++ bintraySettings
 
 	lazy val compilerProject = Project(
 		id = "scalabuff-compiler",
@@ -99,7 +103,7 @@ object ScalaBuffBuild extends Build {
 		settings = defaultSettings
 	)
 
-  override val rootProject = Option(compilerProject)
+  //override val rootProject = Option(compilerProject)
 
 }
 
